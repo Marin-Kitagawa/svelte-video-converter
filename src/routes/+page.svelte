@@ -160,7 +160,7 @@
 	});
 </script>
 
-<h1 class="title">Convert to MP4</h1>
+<h1 class="title">All-in-one Video Converter</h1>
 
 <Dropdown direction="down">
 	<DropdownToggle color="primary" caret
