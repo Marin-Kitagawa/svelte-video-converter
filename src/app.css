@@ -21,3 +21,22 @@ body {
     /* overflow: hidden; */
     transition: background-color 0.3s, color 0.3s;
 }
+
+
+:has([data-state='convert.start']) {
+    --txt-color: hsl(0 0% 0%);
+    --bg-clr: hsl(60 100% 50%);
+}
+
+
+:has([data-state='convert.error']) {
+    --txt-color: hsl(0 0% 0%);
+    --bg-clr: hsl(10 100% 50%);
+}
+
+
+:has([data-state='convert.start']) {
+    --txt-color: hsl(0 0% 0%);
+    --bg-clr: hsl(146 100% 50%);
+}
+
