@@ -95,13 +95,23 @@
 		const videoData = await readFile(video);
 
 		await ffmpeg.writeFile(`input.${fileType}`, videoData);
-		await ffmpeg.exec(['-i', `input.${fileType}`, `${fileName}.${outputFormat}`]);
-		const data = await ffmpeg.readFile(`${fileName}.${outputFormat}`);
+		await ffmpeg.exec(['-i', `input.${fileType}`, `${fileName}${outputFormat}`]);
+		const data = await ffmpeg.readFile(`${fileName}${outputFormat}`);
 
 		state = 'convert.done';
 
 		return data as Uint8Array;
 	}
+
+    function downloadVideo(data: Uint8Array) {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([data.buffer], {type: `video/${outputFormat.slice(1)}`}))
+        a.download = `${fileName}${outputFormat}`;
+        setTimeout(() => {
+            a.click(), 
+            1000
+        })
+    }
 
 	async function handleDrop(event: DragEvent) {
 		if (!event.dataTransfer) return;
@@ -119,6 +129,7 @@
 			error = '';
 			const [file] = event.dataTransfer.files;
 			const data = await convertVideo(file);
+            downloadVideo(data);
 		} else {
 			error = 'Converting MP4 files is not supported. You can convert to MP4 instead.';
 		}
@@ -130,7 +141,6 @@
 		ffmpeg = new FFmpeg();
 
 		ffmpeg.on('log', ({ message }) => {
-			console.log(message);
 		});
 
         ffmpeg.on('progress', (event) => {
@@ -159,7 +169,7 @@
 			<Row cols={4}>
                 {#each formats as format }
                     <Col>
-                        <DropdownItem active={format === outputFormat} on:click={() => {outputFormat = format; console.log(outputFormat)}}>{format}</DropdownItem>
+                        <DropdownItem active={format === outputFormat} on:click={() => outputFormat = format}>{format}</DropdownItem>
                     </Col>
                 {/each}
 			</Row>
