@@ -21,7 +21,7 @@
 	let progress = tweened(0);
 	let fileType = 'webm';
 	let fileName = '';
-    let outputFormat = '';
+	let outputFormat = '';
 	let formats = [
 		'.webm',
 		'.mkv',
@@ -103,15 +103,16 @@
 		return data as Uint8Array;
 	}
 
-    function downloadVideo(data: Uint8Array) {
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(new Blob([data.buffer], {type: `video/${outputFormat.slice(1)}`}))
-        a.download = `${fileName}${outputFormat}`;
-        setTimeout(() => {
-            a.click(), 
-            1000
-        })
-    }
+	function downloadVideo(data: Uint8Array) {
+		const a = document.createElement('a');
+		a.href = URL.createObjectURL(
+			new Blob([data.buffer], { type: `video/${outputFormat.slice(1)}` })
+		);
+		a.download = `${fileName}${outputFormat}`;
+		setTimeout(() => {
+			a.click(), 1000;
+		});
+	}
 
 	async function handleDrop(event: DragEvent) {
 		if (!event.dataTransfer) return;
@@ -125,14 +126,14 @@
 		name.pop();
 		fileName = name.join('.');
 
-		if (event.dataTransfer.files[0].type !== 'video/mp4') {
-			error = '';
-			const [file] = event.dataTransfer.files;
-			const data = await convertVideo(file);
-            downloadVideo(data);
-		} else {
-			error = 'Converting MP4 files is not supported. You can convert to MP4 instead.';
-		}
+		// if (event.dataTransfer.files[0].type !== 'video/mp4') {
+		error = '';
+		const [file] = event.dataTransfer.files;
+		const data = await convertVideo(file);
+		downloadVideo(data);
+		// } else {
+		// 	error = 'Converting MP4 files is not supported. You can convert to MP4 instead.';
+		// }
 	}
 
 	async function loadFFmpeg() {
@@ -140,12 +141,11 @@
 
 		ffmpeg = new FFmpeg();
 
-		ffmpeg.on('log', ({ message }) => {
-		});
+		ffmpeg.on('log', ({ message }) => {});
 
-        ffmpeg.on('progress', (event) => {
-            $progress = event.progress * 100;
-        })
+		ffmpeg.on('progress', (event) => {
+			$progress = event.progress * 100;
+		});
 
 		await ffmpeg.load({
 			coreURL: `${baseURL}/ffmpeg-core.js`,
@@ -163,15 +163,19 @@
 <h1 class="title">Convert to MP4</h1>
 
 <Dropdown direction="down">
-	<DropdownToggle color="primary" caret>{outputFormat || "Choose the target video format"}</DropdownToggle>
+	<DropdownToggle color="primary" caret
+		>{outputFormat || 'Choose the target video format'}</DropdownToggle
+	>
 	<DropdownMenu>
 		<Container>
 			<Row cols={4}>
-                {#each formats as format }
-                    <Col>
-                        <DropdownItem active={format === outputFormat} on:click={() => outputFormat = format}>{format}</DropdownItem>
-                    </Col>
-                {/each}
+				{#each formats as format}
+					<Col>
+						<DropdownItem active={format === outputFormat} on:click={() => (outputFormat = format)}
+							>{format}</DropdownItem
+						>
+					</Col>
+				{/each}
 			</Row>
 		</Container>
 	</DropdownMenu>
