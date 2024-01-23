@@ -35,7 +35,7 @@ body {
 }
 
 
-:has([data-state='convert.start']) {
+:has([data-state='convert.done']) {
     --txt-color: hsl(0 0% 0%);
     --bg-clr: hsl(146 100% 50%);
 }
